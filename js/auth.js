@@ -28,12 +28,13 @@ import {
 //  ⚠️  THAY firebaseConfig bằng config thật của bạn
 // ============================================================
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyAgF4Le5kfzuk8KKeod8HOOIWVOKEuuDtE",
+  authDomain: "travel-ai-cd422.firebaseapp.com",
+  projectId: "travel-ai-cd422",
+  storageBucket: "travel-ai-cd422.firebasestorage.app",
+  messagingSenderId: "88888788030",
+  appId: "1:88888788030:web:e5f4172867f724bc6bfd6f",
+  measurementId: "G-DPP0KL1FQH"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -199,6 +200,13 @@ formLogin?.addEventListener("submit", async (e) => {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
+    // 👉 THÊM ĐOẠN NÀY
+if (window._redirectAfterLogin) {
+  const redirect = window._redirectAfterLogin;
+  window._redirectAfterLogin = null;
+  window.location.href = redirect;
+  return;
+}
     closeModal();
     showToast("Đăng nhập thành công! Chào mừng trở lại 👋");
   } catch (err) {
@@ -221,21 +229,29 @@ btnLogout?.addEventListener("click", async () => {
 // ============================================================
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    // Đã đăng nhập
+    window._isLoggedIn = true;
     btnOpenLogin && (btnOpenLogin.style.display = "none");
     if (userMenu) userMenu.style.display = "flex";
-
+ 
     // Lấy tên từ Firestore (fallback về displayName)
     try {
       const snap = await getDoc(doc(db, "users", user.uid));
       const name = snap.exists() ? snap.data().name : user.displayName;
+      const initial = (name || "U")[0].toUpperCase();
+ 
       if (userDisplayName) userDisplayName.textContent = name || "Bạn";
-      if (userAvatar) userAvatar.textContent = (name || "U")[0].toUpperCase();
+      if (userAvatar) userAvatar.textContent = initial;
+ 
+      // Cập nhật dropdown
+      const dropdownAvatar = document.getElementById("dropdown-avatar");
+      const dropdownEmail  = document.getElementById("user-display-email");
+      if (dropdownAvatar) dropdownAvatar.textContent = initial;
+      if (dropdownEmail)  dropdownEmail.textContent  = user.email || "";
     } catch {
       if (userDisplayName) userDisplayName.textContent = user.displayName || "Bạn";
     }
   } else {
-    // Chưa đăng nhập
+    window._isLoggedIn = false;
     btnOpenLogin && (btnOpenLogin.style.display = "");
     if (userMenu) userMenu.style.display = "none";
   }
