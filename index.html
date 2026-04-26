@@ -14,7 +14,6 @@
 
     <script src="js/app.js" defer></script>
     <script type="module" src="js/auth.js"></script>
-    
 </head>
 <body>
 
@@ -26,14 +25,14 @@
                 <!-- Cần đăng nhập -->
                 <li><a href="#" onclick="requireAuth('frontend/chatai.html?view=view-explore'); return false;">Điểm đến</a></li>
                 <li><a href="#" onclick="requireAuth('frontend/chatai.html?view=view-suggestions'); return false;">Gợi ý</a></li>
-
+                <!-- Ai cũng vào được -->
                 <li><a href="about.html">Về chúng tôi</a></li>
             </ul>
 
             <div class="nav-auth">
                 <button id="openLogin" class="btn-login">Đăng nhập</button>
 
-                <!-- User menu dropdown-->
+                <!-- User menu dropdown (hiện khi đã login) -->
                 <div class="user-menu" id="user-menu">
                     <div class="user-avatar" id="user-avatar" onclick="toggleDropdown()">U</div>
                     <div class="user-dropdown" id="user-dropdown">
@@ -48,8 +47,8 @@
                         <a href="profile.html" class="dropdown-item">
                             <i class="fa-solid fa-circle-user"></i> Thông tin tài khoản
                         </a>
-                        <a href="frontend/chatai.html" class="dropdown-item">
-                            <i class="fa-solid fa-paper-plane"></i> Bắt đầu chat
+                        <a href="#" class="dropdown-item" onclick="openPwPopup(); return false;">
+                            <i class="fa-solid fa-key"></i> Đổi mật khẩu
                         </a>
                         <div class="dropdown-divider"></div>
                         <button class="dropdown-item danger" id="btn-logout">
@@ -208,13 +207,126 @@
         </div>
     </div>
 
+    <!-- ── POPUP ĐỔI MẬT KHẨU ── -->
+    <div id="pwPopupOverlay" style="
+      position:fixed; inset:0;
+      background:rgba(5,10,20,0.6);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      display:flex; align-items:center; justify-content:center;
+      z-index:2000; padding:16px;
+      opacity:0; pointer-events:none;
+      transition:opacity 0.3s ease;
+    ">
+      <div id="pwPopupModal" style="
+        background:#0f1623;
+        border:1px solid rgba(255,255,255,0.1);
+        border-radius:20px;
+        padding:32px;
+        width:100%; max-width:400px;
+        position:relative;
+        transform:translateY(24px) scale(0.97);
+        opacity:0;
+        transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+        box-shadow:0 32px 80px rgba(0,0,0,0.5);
+      ">
+        <!-- Header -->
+        <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:20px;">
+          <div>
+            <div style="
+              width:44px; height:44px; border-radius:12px;
+              background:linear-gradient(135deg,#3b82f6,#6366f1);
+              display:flex; align-items:center; justify-content:center;
+              font-size:1.2rem; margin-bottom:12px;
+            ">🔐</div>
+            <h2 style="font-size:1.15rem; font-weight:700; color:#f0f4ff; letter-spacing:-0.02em;">Đổi mật khẩu</h2>
+            <p style="font-size:0.8rem; color:rgba(240,244,255,0.4); margin-top:4px;">Nhập mật khẩu mới cho tài khoản của bạn.</p>
+          </div>
+          <button onclick="closePwPopup()" style="
+            width:32px; height:32px; border-radius:50%; flex-shrink:0;
+            background:rgba(255,255,255,0.06); border:none;
+            color:rgba(255,255,255,0.5); font-size:1rem;
+            cursor:pointer; display:flex; align-items:center; justify-content:center;
+            transition:background 0.2s;
+          " onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">✕</button>
+        </div>
+
+        <!-- Fields -->
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="font-size:0.75rem; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.07em;">Mật khẩu mới</label>
+            <div id="wrapPwNew" style="
+              display:flex; align-items:center; gap:10px;
+              background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+              border-radius:10px; padding:11px 14px;
+              transition:border-color 0.2s;
+            ">
+              <i class="fa-solid fa-lock" style="color:rgba(255,255,255,0.25); font-size:0.85rem;"></i>
+              <input type="password" id="pwNewInput" placeholder="Tối thiểu 6 ký tự" style="
+                flex:1; background:none; border:none; outline:none;
+                font-size:0.9rem; color:#fff; font-family:inherit;
+              " onfocus="document.getElementById('wrapPwNew').style.borderColor='#3b82f6'"
+                 onblur="document.getElementById('wrapPwNew').style.borderColor='rgba(255,255,255,0.1)'"/>
+              <button type="button" onclick="togglePwPopup('pwNewInput',this)" style="
+                background:none; border:none; cursor:pointer;
+                color:rgba(255,255,255,0.3); font-size:0.9rem; padding:0; flex-shrink:0;
+              ">👁</button>
+            </div>
+            <span id="errPwNew" style="font-size:0.775rem; color:#f87171; min-height:16px;"></span>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <label style="font-size:0.75rem; font-weight:700; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:0.07em;">Xác nhận mật khẩu</label>
+            <div id="wrapPwConfirm" style="
+              display:flex; align-items:center; gap:10px;
+              background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+              border-radius:10px; padding:11px 14px;
+              transition:border-color 0.2s;
+            ">
+              <i class="fa-solid fa-lock" style="color:rgba(255,255,255,0.25); font-size:0.85rem;"></i>
+              <input type="password" id="pwConfirmInput" placeholder="Nhập lại mật khẩu mới" style="
+                flex:1; background:none; border:none; outline:none;
+                font-size:0.9rem; color:#fff; font-family:inherit;
+              " onfocus="document.getElementById('wrapPwConfirm').style.borderColor='#3b82f6'"
+                 onblur="document.getElementById('wrapPwConfirm').style.borderColor='rgba(255,255,255,0.1)'"/>
+              <button type="button" onclick="togglePwPopup('pwConfirmInput',this)" style="
+                background:none; border:none; cursor:pointer;
+                color:rgba(255,255,255,0.3); font-size:0.9rem; padding:0; flex-shrink:0;
+              ">👁</button>
+            </div>
+            <span id="errPwConfirm" style="font-size:0.775rem; color:#f87171; min-height:16px;"></span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:24px;">
+          <button onclick="closePwPopup()" style="
+            background:none; border:1px solid rgba(255,255,255,0.1);
+            border-radius:10px; padding:10px 20px;
+            font-size:0.875rem; font-weight:600;
+            color:rgba(255,255,255,0.5); cursor:pointer;
+            font-family:inherit; transition:all 0.2s;
+          " onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Huỷ</button>
+
+          <button id="btnSavePwPopup" onclick="savePwPopup()" style="
+            display:flex; align-items:center; gap:8px;
+            background:linear-gradient(135deg,#3b82f6,#6366f1);
+            border:none; border-radius:10px; padding:10px 20px;
+            font-size:0.875rem; font-weight:700; color:#fff;
+            cursor:pointer; font-family:inherit;
+            transition:opacity 0.2s, transform 0.15s;
+          " onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+            <i class="fa-solid fa-floppy-disk"></i> Cập nhật
+          </button>
+        </div>
+      </div>
+    </div>
+
     <script>
-        
-        // Trạng thái login — auth.js (module) sẽ set window._isLoggedIn = true/false
+        // ── Trạng thái login (auth.js sẽ cập nhật) ──
         window._isLoggedIn = false;
         window._redirectAfterLogin = null;
 
-        // Kiểm tra login trước khi điều hướng
         function requireAuth(dest) {
             if (window._isLoggedIn) {
                 window.location.href = dest;
@@ -225,7 +337,6 @@
             }
         }
 
-        // Toggle password
         function togglePw(inputId, btn) {
             const input = document.getElementById(inputId);
             const show = input.type === "password";
@@ -233,7 +344,6 @@
             btn.textContent = show ? "🙈" : "👁";
         }
 
-        // Dropdown avatar
         function toggleDropdown() {
             document.getElementById("user-dropdown").classList.toggle("open");
         }
@@ -242,6 +352,89 @@
             const dd   = document.getElementById("user-dropdown");
             if (dd && !menu?.contains(e.target)) dd.classList.remove("open");
         });
+
+        // ── Popup đổi mật khẩu ──
+        function openPwPopup() {
+            // Đóng dropdown trước
+            document.getElementById("user-dropdown").classList.remove("open");
+
+            const overlay = document.getElementById("pwPopupOverlay");
+            const modal   = document.getElementById("pwPopupModal");
+            overlay.style.opacity = "1";
+            overlay.style.pointerEvents = "all";
+            modal.style.opacity = "1";
+            modal.style.transform = "translateY(0) scale(1)";
+            document.body.style.overflow = "hidden";
+        }
+
+        function closePwPopup() {
+            const overlay = document.getElementById("pwPopupOverlay");
+            const modal   = document.getElementById("pwPopupModal");
+            overlay.style.opacity = "0";
+            overlay.style.pointerEvents = "none";
+            modal.style.opacity = "0";
+            modal.style.transform = "translateY(24px) scale(0.97)";
+            document.body.style.overflow = "";
+            // Reset
+            document.getElementById("pwNewInput").value = "";
+            document.getElementById("pwConfirmInput").value = "";
+            document.getElementById("errPwNew").textContent = "";
+            document.getElementById("errPwConfirm").textContent = "";
+        }
+
+        // Đóng khi click ra ngoài
+        document.getElementById("pwPopupOverlay").addEventListener("click", (e) => {
+            if (e.target === document.getElementById("pwPopupOverlay")) closePwPopup();
+        });
+
+        function togglePwPopup(id, btn) {
+            const input = document.getElementById(id);
+            const show = input.type === "password";
+            input.type = show ? "text" : "password";
+            btn.textContent = show ? "🙈" : "👁";
+        }
+
+        async function savePwPopup() {
+            const newPw  = document.getElementById("pwNewInput").value;
+            const confPw = document.getElementById("pwConfirmInput").value;
+            document.getElementById("errPwNew").textContent = "";
+            document.getElementById("errPwConfirm").textContent = "";
+
+            if (newPw.length < 6) {
+                document.getElementById("errPwNew").textContent = "Mật khẩu phải có ít nhất 6 ký tự.";
+                return;
+            }
+            if (newPw !== confPw) {
+                document.getElementById("errPwConfirm").textContent = "Mật khẩu xác nhận không khớp.";
+                return;
+            }
+
+            const btn = document.getElementById("btnSavePwPopup");
+            btn.disabled = true;
+            btn.textContent = "Đang xử lý...";
+
+            try {
+                // Lấy currentUser từ Firebase (auth.js export ra window)
+                const { updatePassword } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js");
+                await updatePassword(window._currentUser, newPw);
+                closePwPopup();
+                // Dùng toast của auth.js
+                let toast = document.getElementById("auth-toast");
+                if (!toast) { toast = document.createElement("div"); toast.id = "auth-toast"; document.body.appendChild(toast); }
+                toast.textContent = "Đổi mật khẩu thành công! 🔐";
+                toast.classList.add("show");
+                setTimeout(() => toast.classList.remove("show"), 3500);
+            } catch (err) {
+                if (err.code === "auth/requires-recent-login") {
+                    document.getElementById("errPwConfirm").textContent = "Phiên hết hạn. Đăng xuất và đăng nhập lại.";
+                } else {
+                    document.getElementById("errPwConfirm").textContent = "Đổi mật khẩu thất bại. Thử lại sau.";
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Cập nhật';
+            }
+        }
     </script>
 
     <footer class="footer">

@@ -1,9 +1,3 @@
-/* ============================================================
-   TravelAI — Profile Page Styles
-   Font: Syne (headings) + DM Sans (body)
-   Theme: Deep navy dark, blue accent
-   ============================================================ */
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -24,7 +18,7 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: "DM Sans", sans-serif;
+  font-family: "Inter", sans-serif;
   min-height: 100vh;
   line-height: 1.6;
 }
@@ -46,7 +40,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: "Syne", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 800;
   font-size: 1.2rem;
   color: var(--text);
@@ -121,7 +115,7 @@ body {
   box-shadow: 0 0 0 6px rgba(59,130,246,0.08);
 }
 .avatar-initial {
-  font-family: "Syne", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 800;
   font-size: 2.2rem;
   color: #fff;
@@ -152,7 +146,7 @@ body {
 .avatar-edit-btn:hover { background: var(--accent2); transform: scale(1.1); }
 
 .avatar-name {
-  font-family: "Syne", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 700;
   font-size: 1.05rem;
   color: var(--text);
@@ -177,7 +171,7 @@ body {
 }
 .stat-item { flex: 1; text-align: center; }
 .stat-num {
-  font-family: "Syne", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 800;
   font-size: 1.4rem;
   color: var(--accent);
@@ -207,7 +201,7 @@ body {
   margin-bottom: 28px;
 }
 .info-header h1 {
-  font-family: "Syne", sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 800;
   font-size: 1.4rem;
 }
@@ -362,7 +356,7 @@ body {
 /* ── Password section ── */
 .pw-section h2,
 .danger-zone h2 {
-  font-family: "Syne", sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: 4px;

@@ -46,8 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
             return;
         }
-
-       
         if (loginBtn && emailInput) {
             loginBtn.onclick = (e) => {
                 e.preventDefault();

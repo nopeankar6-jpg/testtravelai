@@ -15,9 +15,9 @@ import {
   serverTimestamp,
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-
-//  ⚠️  Config api
-
+// ============================================================
+//  ⚠️  THAY firebaseConfig bằng config thật của bạn
+// ============================================================
 const firebaseConfig = {
   apiKey: "AIzaSyAgF4Le5kfzuk8KKeod8HOOIWVOKEuuDtE",
   authDomain: "travel-ai-cd422.firebaseapp.com",
@@ -32,7 +32,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// ============================================================
 //  DOM Elements
+// ============================================================
 const authModal      = document.getElementById("authModal");
 const tabLogin       = document.getElementById("tab-login");
 const tabRegister    = document.getElementById("tab-register");
@@ -45,6 +47,9 @@ const userAvatar     = document.getElementById("user-avatar");
 const userDisplayName = document.getElementById("user-display-name");
 const btnLogout      = document.getElementById("btn-logout");
 
+// ============================================================
+//  Mở / đóng modal
+// ============================================================
 function openModal(tab = "login") {
   authModal.classList.add("open");
   document.body.style.overflow = "hidden";
@@ -63,6 +68,9 @@ authModal?.addEventListener("click", (e) => {
   if (e.target === authModal) closeModal();
 });
 
+// ============================================================
+//  Chuyển tab Login ↔ Register
+// ============================================================
 function switchTab(tab) {
   const isLogin = tab === "login";
   tabLogin.classList.toggle("active", isLogin);
@@ -75,6 +83,7 @@ function switchTab(tab) {
 tabLogin?.addEventListener("click", () => switchTab("login"));
 tabRegister?.addEventListener("click", () => switchTab("register"));
 
+// link "Đăng ký ngay" trong form login
 document.getElementById("link-to-register")?.addEventListener("click", (e) => {
   e.preventDefault();
   switchTab("register");
@@ -83,16 +92,23 @@ document.getElementById("link-to-login")?.addEventListener("click", (e) => {
   e.preventDefault();
   switchTab("login");
 });
+
+// ============================================================
+//  Helper: hiển thị lỗi
+// ============================================================
 function showError(elementId, message) {
   const el = document.getElementById(elementId);
   if (el) { el.textContent = message; el.style.display = "block"; }
 }
+
 function clearErrors() {
   document.querySelectorAll(".field-error").forEach((el) => {
     el.textContent = "";
     el.style.display = "none";
   });
 }
+
+// Map mã lỗi Firebase → tiếng Việt
 function translateFirebaseError(code) {
   const map = {
     "auth/email-already-in-use":    "Email này đã được đăng ký.",
@@ -106,6 +122,10 @@ function translateFirebaseError(code) {
   };
   return map[code] || "Đã xảy ra lỗi. Vui lòng thử lại.";
 }
+
+// ============================================================
+//  Đăng ký
+// ============================================================
 formRegister?.addEventListener("submit", async (e) => {
   e.preventDefault();
   clearErrors();
@@ -114,6 +134,8 @@ formRegister?.addEventListener("submit", async (e) => {
   const email    = document.getElementById("reg-email").value.trim();
   const password = document.getElementById("reg-password").value;
   const confirm  = document.getElementById("reg-confirm").value;
+
+  // Validate
   let hasError = false;
   if (!name) { showError("err-reg-name", "Vui lòng nhập họ tên."); hasError = true; }
   if (!email) { showError("err-reg-email", "Vui lòng nhập email."); hasError = true; }
@@ -150,6 +172,10 @@ formRegister?.addEventListener("submit", async (e) => {
     setLoading(btn, false);
   }
 });
+
+// ============================================================
+//  Đăng nhập
+// ============================================================
 formLogin?.addEventListener("submit", async (e) => {
   e.preventDefault();
   clearErrors();
@@ -165,13 +191,16 @@ formLogin?.addEventListener("submit", async (e) => {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-if (window._redirectAfterLogin) {
-  const redirect = window._redirectAfterLogin;
-  window._redirectAfterLogin = null;
-  window.location.href = redirect;
-  return;
-}
     closeModal();
+
+    // Nếu có trang cần redirect sau login (vd: goToChat)
+    if (window._redirectAfterLogin) {
+      const dest = window._redirectAfterLogin;
+      window._redirectAfterLogin = null;
+      window.location.href = dest;
+      return;
+    }
+
     showToast("Đăng nhập thành công! Chào mừng trở lại 👋");
   } catch (err) {
     showError("err-login-password", translateFirebaseError(err.code));
@@ -179,41 +208,77 @@ if (window._redirectAfterLogin) {
     setLoading(btn, false);
   }
 });
+
+// ============================================================
 //  Đăng xuất
+// ============================================================
 btnLogout?.addEventListener("click", async () => {
   await signOut(auth);
   showToast("Đã đăng xuất.");
 });
+
+// ============================================================
 //  Theo dõi trạng thái auth → cập nhật UI navbar
+// ============================================================
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     window._isLoggedIn = true;
+    window._currentUser = user; // ← cho popup đổi MK dùng
+
     btnOpenLogin && (btnOpenLogin.style.display = "none");
     if (userMenu) userMenu.style.display = "flex";
- 
+
     // Lấy tên từ Firestore (fallback về displayName)
     try {
       const snap = await getDoc(doc(db, "users", user.uid));
       const name = snap.exists() ? snap.data().name : user.displayName;
+      const avatarBase64 = snap.exists() ? snap.data().avatarBase64 : null;
       const initial = (name || "U")[0].toUpperCase();
- 
+
       if (userDisplayName) userDisplayName.textContent = name || "Bạn";
-      if (userAvatar) userAvatar.textContent = initial;
- 
-      // Cập nhật dropdown
+
+      // Navbar avatar: hiện ảnh nếu có, fallback chữ cái
+      if (userAvatar) {
+        if (avatarBase64) {
+          userAvatar.style.backgroundImage = `url(${avatarBase64})`;
+          userAvatar.style.backgroundSize = "cover";
+          userAvatar.style.backgroundPosition = "center";
+          userAvatar.textContent = "";
+        } else {
+          userAvatar.style.backgroundImage = "";
+          userAvatar.textContent = initial;
+        }
+      }
+
+      // Dropdown
       const dropdownAvatar = document.getElementById("dropdown-avatar");
       const dropdownEmail  = document.getElementById("user-display-email");
-      if (dropdownAvatar) dropdownAvatar.textContent = initial;
-      if (dropdownEmail)  dropdownEmail.textContent  = user.email || "";
+      if (dropdownAvatar) {
+        if (avatarBase64) {
+          dropdownAvatar.style.backgroundImage = `url(${avatarBase64})`;
+          dropdownAvatar.style.backgroundSize = "cover";
+          dropdownAvatar.style.backgroundPosition = "center";
+          dropdownAvatar.textContent = "";
+        } else {
+          dropdownAvatar.style.backgroundImage = "";
+          dropdownAvatar.textContent = initial;
+        }
+      }
+      if (dropdownEmail) dropdownEmail.textContent = user.email || "";
     } catch {
       if (userDisplayName) userDisplayName.textContent = user.displayName || "Bạn";
     }
   } else {
     window._isLoggedIn = false;
+    window._currentUser = null;
     btnOpenLogin && (btnOpenLogin.style.display = "");
     if (userMenu) userMenu.style.display = "none";
   }
 });
+
+// ============================================================
+//  Helper: loading state cho button
+// ============================================================
 function setLoading(btn, loading) {
   if (!btn) return;
   btn.disabled = loading;
@@ -221,6 +286,9 @@ function setLoading(btn, loading) {
   btn.textContent = loading ? "Đang xử lý..." : btn.dataset.original;
 }
 
+// ============================================================
+//  Toast notification
+// ============================================================
 function showToast(message) {
   let toast = document.getElementById("auth-toast");
   if (!toast) {
