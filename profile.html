@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TravelAI — Thông tin tài khoản</title>
+  <link rel="icon" type="image/png" href="assets/images/travelicon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="css/profile.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="p-nav">
+    <a href="index.html" class="p-nav-logo">
+      <span class="logo-icon">✈</span> TravelAI
+    </a>
+    <a href="index.html" class="p-nav-back">
+      <i class="fa-solid fa-arrow-left"></i> Quay lại
+    </a>
+  </nav>
+
+  <div class="profile-root">
+
+    <!-- LEFT — Avatar card -->
+    <aside class="avatar-card">
+      <div class="avatar-wrap">
+        <div class="avatar-circle" id="avatarCircle">
+          <span class="avatar-initial" id="avatarInitial">?</span>
+          <img class="avatar-img" id="avatarImg" src="" alt="" />
+        </div>
+        <label class="avatar-edit-btn" for="avatarInput" title="Đổi ảnh">
+          <i class="fa-solid fa-camera"></i>
+        </label>
+        <input type="file" id="avatarInput" accept="image/*" hidden />
+      </div>
+      <div class="avatar-name" id="sidebarName">—</div>
+      <div class="avatar-email" id="sidebarEmail">—</div>
+
+      <div class="avatar-stats">
+        <div class="stat-item">
+          <span class="stat-num" id="statTrips">0</span>
+          <span class="stat-label">Chuyến đi</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-num" id="statSaved">0</span>
+          <span class="stat-label">Đã lưu</span>
+        </div>
+      </div>
+
+      <div class="join-date" id="joinDate"></div>
+    </aside>
+
+    <!-- RIGHT — Info form -->
+    <main class="info-card">
+      <div class="info-header">
+        <h1>Thông tin tài khoản</h1>
+        <button class="btn-edit" id="btnEdit">
+          <i class="fa-solid fa-pen"></i> Chỉnh sửa
+        </button>
+      </div>
+
+      <form id="profileForm" novalidate>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Họ và tên</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-user"></i>
+              <input type="text" id="fieldName" placeholder="Nguyễn Văn A" disabled />
+            </div>
+            <span class="field-err" id="errName"></span>
+          </div>
+
+          <div class="field-group">
+            <label>Email</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope"></i>
+              <input type="email" id="fieldEmail" placeholder="email@example.com" disabled />
+            </div>
+            <span class="field-hint">Email không thể thay đổi.</span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Số điện thoại</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-phone"></i>
+              <input type="tel" id="fieldPhone" placeholder="0901 234 567" disabled />
+            </div>
+            <span class="field-err" id="errPhone"></span>
+          </div>
+
+          <div class="field-group">
+            <label>Ngày sinh</label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-cake-candles"></i>
+              <input type="date" id="fieldDob" disabled />
+            </div>
+          </div>
+        </div>
+
+        <div class="field-group full-width">
+          <label>Địa chỉ</label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-location-dot"></i>
+            <input type="text" id="fieldAddress" placeholder="123 Đường ABC, Quận 1, TP.HCM" disabled />
+          </div>
+        </div>
+
+        <!-- Action buttons (chỉ hiện khi đang edit) -->
+        <div class="form-actions hidden" id="formActions">
+          <button type="button" class="btn-cancel" id="btnCancel">Huỷ</button>
+          <button type="submit" class="btn-save" id="btnSave">
+            <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Đổi mật khẩu -->
+      <div class="section-divider"></div>
+      <div class="pw-section">
+        <div class="pw-header">
+          <div>
+            <h2>Mật khẩu</h2>
+            <p>Cập nhật mật khẩu định kỳ để bảo vệ tài khoản.</p>
+          </div>
+          <button class="btn-edit" id="btnChangePw">
+            <i class="fa-solid fa-key"></i> Đổi mật khẩu
+          </button>
+        </div>
+
+        <div class="pw-form hidden" id="pwForm">
+          <div class="field-row">
+            <div class="field-group">
+              <label>Mật khẩu mới</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="fieldNewPw" placeholder="Tối thiểu 6 ký tự" />
+                <button type="button" class="toggle-pw" onclick="togglePw('fieldNewPw',this)">👁</button>
+              </div>
+              <span class="field-err" id="errNewPw"></span>
+            </div>
+            <div class="field-group">
+              <label>Xác nhận mật khẩu</label>
+              <div class="input-wrap">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="fieldConfirmPw" placeholder="Nhập lại mật khẩu" />
+                <button type="button" class="toggle-pw" onclick="togglePw('fieldConfirmPw',this)">👁</button>
+              </div>
+              <span class="field-err" id="errConfirmPw"></span>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" id="btnCancelPw">Huỷ</button>
+            <button type="button" class="btn-save" id="btnSavePw">
+              <i class="fa-solid fa-floppy-disk"></i> Cập nhật mật khẩu
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="section-divider"></div>
+      <div class="danger-zone">
+        <div>
+          <h2>Đăng xuất</h2>
+          <p>Đăng xuất khỏi tài khoản TravelAI trên thiết bị này.</p>
+        </div>
+        <button class="btn-logout-profile" id="btnLogout">
+          <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay hidden" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore, doc, getDoc, setDoc, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import {
+      getStorage, ref, uploadBytes, getDownloadURL
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
+
+    // ⚠️ Dùng chung config với auth.js
+    const firebaseConfig = {
+      apiKey: "AIzaSyAgF4Le5kfzuk8KKeod8HOOIWVOKEuuDtE",
+      authDomain: "travel-ai-cd422.firebaseapp.com",
+      projectId: "travel-ai-cd422",
+      storageBucket: "travel-ai-cd422.firebasestorage.app",
+      messagingSenderId: "88888788030",
+      appId: "1:88888788030:web:e5f4172867f724bc6bfd6f",
+    };
+
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
+    const db       = getFirestore(app);
+    const storage  = getStorage(app);
+
+    // ── DOM ──
+    const avatarInitial  = document.getElementById("avatarInitial");
+    const avatarImg      = document.getElementById("avatarImg");
+    const avatarInput    = document.getElementById("avatarInput");
+    const sidebarName    = document.getElementById("sidebarName");
+    const sidebarEmail   = document.getElementById("sidebarEmail");
+    const joinDate       = document.getElementById("joinDate");
+    const statTrips      = document.getElementById("statTrips");
+    const statSaved      = document.getElementById("statSaved");
+    const fieldName      = document.getElementById("fieldName");
+    const fieldEmail     = document.getElementById("fieldEmail");
+    const fieldPhone     = document.getElementById("fieldPhone");
+    const fieldDob       = document.getElementById("fieldDob");
+    const fieldAddress   = document.getElementById("fieldAddress");
+    const btnEdit        = document.getElementById("btnEdit");
+    const btnCancel      = document.getElementById("btnCancel");
+    const formActions    = document.getElementById("formActions");
+    const profileForm    = document.getElementById("profileForm");
+    const btnChangePw    = document.getElementById("btnChangePw");
+    const btnCancelPw    = document.getElementById("btnCancelPw");
+    const btnSavePw      = document.getElementById("btnSavePw");
+    const pwForm         = document.getElementById("pwForm");
+    const btnLogout      = document.getElementById("btnLogout");
+    const toast          = document.getElementById("toast");
+    const loadingOverlay = document.getElementById("loadingOverlay");
+
+    let currentUser = null;
+    let originalData = {};
+
+    // ── Helpers ──
+    function showToast(msg, type = "success") {
+      toast.textContent = msg;
+      toast.className = `toast show ${type}`;
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+    function setLoading(on) {
+      loadingOverlay.classList.toggle("hidden", !on);
+    }
+    function clearErrs() {
+      document.querySelectorAll(".field-err").forEach(e => e.textContent = "");
+    }
+    window.togglePw = (id, btn) => {
+      const inp = document.getElementById(id);
+      const show = inp.type === "password";
+      inp.type = show ? "text" : "password";
+      btn.textContent = show ? "🙈" : "👁";
+    };
+
+    // ── Load profile ──
+    async function loadProfile(user) {
+      currentUser = user;
+      fieldEmail.value = user.email || "";
+      sidebarEmail.textContent = user.email || "";
+
+      try {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        const data = snap.exists() ? snap.data() : {};
+        originalData = data;
+
+        const name = data.name || user.displayName || "";
+        fieldName.value    = name;
+        fieldPhone.value   = data.phone || "";
+        fieldDob.value     = data.dob || "";
+        fieldAddress.value = data.address || "";
+
+        sidebarName.textContent = name || "Chưa cập nhật";
+        avatarInitial.textContent = (name || "?")[0].toUpperCase();
+
+        statTrips.textContent = (data.trips || []).length;
+        statSaved.textContent = (data.saved || []).length;
+
+        if (data.createdAt?.seconds) {
+          const d = new Date(data.createdAt.seconds * 1000);
+          joinDate.textContent = `Tham gia từ ${d.toLocaleDateString("vi-VN", { month: "long", year: "numeric" })}`;
+        }
+
+        // Avatar ảnh
+        if (data.avatarUrl) {
+          avatarImg.src = data.avatarUrl;
+          avatarImg.style.display = "block";
+          avatarInitial.style.display = "none";
+        }
+      } catch (e) {
+        showToast("Không thể tải thông tin.", "error");
+      }
+    }
+
+    // ── Auth state ──
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        loadProfile(user);
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    // ── Edit toggle ──
+    const editableFields = [fieldName, fieldPhone, fieldDob, fieldAddress];
+
+    btnEdit.addEventListener("click", () => {
+      editableFields.forEach(f => { f.disabled = false; f.closest(".input-wrap").classList.add("active"); });
+      formActions.classList.remove("hidden");
+      btnEdit.classList.add("hidden");
+    });
+
+    btnCancel.addEventListener("click", () => {
+      fieldName.value    = originalData.name || "";
+      fieldPhone.value   = originalData.phone || "";
+      fieldDob.value     = originalData.dob || "";
+      fieldAddress.value = originalData.address || "";
+      exitEditMode();
+    });
+
+    function exitEditMode() {
+      editableFields.forEach(f => { f.disabled = true; f.closest(".input-wrap").classList.remove("active"); });
+      formActions.classList.add("hidden");
+      btnEdit.classList.remove("hidden");
+      clearErrs();
+    }
+
+    // ── Save profile ──
+    profileForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      clearErrs();
+
+      const name = fieldName.value.trim();
+      if (!name) { document.getElementById("errName").textContent = "Vui lòng nhập tên."; return; }
+
+      const phone = fieldPhone.value.trim();
+      if (phone && !/^[0-9]{9,11}$/.test(phone.replace(/\s/g,""))) {
+        document.getElementById("errPhone").textContent = "Số điện thoại không hợp lệ."; return;
+      }
+
+      setLoading(true);
+      try {
+        await setDoc(doc(db, "users", currentUser.uid), {
+          name,
+          phone:   fieldPhone.value.trim(),
+          dob:     fieldDob.value,
+          address: fieldAddress.value.trim(),
+          email:   currentUser.email,
+          uid:     currentUser.uid,
+          updatedAt: serverTimestamp(),
+        }, { merge: true });
+
+        originalData = { ...originalData, name, phone: fieldPhone.value.trim(), dob: fieldDob.value, address: fieldAddress.value.trim() };
+        sidebarName.textContent = name;
+        avatarInitial.textContent = name[0].toUpperCase();
+        exitEditMode();
+        showToast("Cập nhật thông tin thành công! ✅");
+      } catch {
+        showToast("Lưu thất bại, thử lại.", "error");
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // ── Upload avatar ──
+    avatarInput.addEventListener("change", async e => {
+      const file = e.target.files[0];
+      if (!file || !currentUser) return;
+
+      if (file.size > 3 * 1024 * 1024) { showToast("Ảnh tối đa 3MB.", "error"); return; }
+
+      setLoading(true);
+      try {
+        const storageRef = ref(storage, `avatars/${currentUser.uid}`);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+
+        await setDoc(doc(db, "users", currentUser.uid), { avatarUrl: url }, { merge: true });
+
+        avatarImg.src = url;
+        avatarImg.style.display = "block";
+        avatarInitial.style.display = "none";
+        showToast("Cập nhật ảnh đại diện thành công! 🎉");
+      } catch {
+        showToast("Upload ảnh thất bại.", "error");
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // ── Đổi mật khẩu ──
+    btnChangePw.addEventListener("click", () => {
+      pwForm.classList.toggle("hidden");
+    });
+    btnCancelPw.addEventListener("click", () => {
+      pwForm.classList.add("hidden");
+      document.getElementById("fieldNewPw").value = "";
+      document.getElementById("fieldConfirmPw").value = "";
+      document.getElementById("errNewPw").textContent = "";
+      document.getElementById("errConfirmPw").textContent = "";
+    });
+
+    btnSavePw.addEventListener("click", async () => {
+      const newPw  = document.getElementById("fieldNewPw").value;
+      const confPw = document.getElementById("fieldConfirmPw").value;
+      document.getElementById("errNewPw").textContent = "";
+      document.getElementById("errConfirmPw").textContent = "";
+
+      if (newPw.length < 6) { document.getElementById("errNewPw").textContent = "Mật khẩu phải có ít nhất 6 ký tự."; return; }
+      if (newPw !== confPw) { document.getElementById("errConfirmPw").textContent = "Mật khẩu xác nhận không khớp."; return; }
+
+      setLoading(true);
+      try {
+        await updatePassword(currentUser, newPw);
+        showToast("Đổi mật khẩu thành công! 🔐");
+        btnCancelPw.click();
+      } catch (err) {
+        if (err.code === "auth/requires-recent-login") {
+          showToast("Phiên đăng nhập hết hạn. Vui lòng đăng xuất và đăng nhập lại.", "error");
+        } else {
+          showToast("Đổi mật khẩu thất bại.", "error");
+        }
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // ── Đăng xuất ──
+    btnLogout.addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "index.html";
+    });
+  </script>
+</body>
+</html>
