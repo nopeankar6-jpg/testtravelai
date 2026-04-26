@@ -111,7 +111,7 @@
           </div>
         </div>
 
-        <!-- Action buttons (chỉ hiện khi đang edit) -->
+        <!-- Action buttons  -->
         <div class="form-actions hidden" id="formActions">
           <button type="button" class="btn-cancel" id="btnCancel">Huỷ</button>
           <button type="submit" class="btn-save" id="btnSave">
@@ -125,7 +125,6 @@
 
   <!-- Toast -->
   <div id="toast" class="toast"></div>
-
   <!-- Loading overlay -->
   <div class="loading-overlay hidden" id="loadingOverlay">
     <div class="spinner"></div>
@@ -305,7 +304,7 @@
       const file = e.target.files[0];
       if (!file || !currentUser) return;
 
-      // Giới hạn 500KB để không vượt giới hạn Firestore document (1MB)
+      // giới hạn Firestore document (1MB)
       if (file.size > 500 * 1024) {
         showToast("Ảnh tối đa 500KB. Hãy chọn ảnh nhỏ hơn.", "error");
         return;
@@ -354,7 +353,6 @@
         reader.readAsDataURL(file);
       });
     }
-
 
   </script>
 
