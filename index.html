@@ -10,12 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <link rel="stylesheet" href="css/style.css">
-    <!-- ✅ Auth styles -->
     <link rel="stylesheet" href="css/auth.css">
 
     <script src="js/app.js" defer></script>
-    <!-- ✅ Auth module (ES Module) -->
     <script type="module" src="js/auth.js"></script>
+    
 </head>
 <body>
 
@@ -24,23 +23,42 @@
             <div class="logo">TravelAI</div>
             
             <ul class="nav-links">
-                <li><a href="frontend/chatai.html?view=view-explore">Điểm đến</a></li>
-                <li><a href="frontend/chatai.html?view=view-suggestions">Gợi ý</a></li>
-                <li><a href="#">Về chúng tôi</a></li>
+                <!-- Cần đăng nhập -->
+                <li><a href="#" onclick="requireAuth('frontend/chatai.html?view=view-explore'); return false;">Điểm đến</a></li>
+                <li><a href="#" onclick="requireAuth('frontend/chatai.html?view=view-suggestions'); return false;">Gợi ý</a></li>
+
+                <li><a href="about.html">Về chúng tôi</a></li>
             </ul>
 
             <div class="nav-auth">
-                <!-- Nút đăng nhập (ẩn khi đã login) -->
                 <button id="openLogin" class="btn-login">Đăng nhập</button>
 
-                <!-- User menu (hiện khi đã login) -->
+                <!-- User menu dropdown-->
                 <div class="user-menu" id="user-menu">
-                    <div class="user-avatar" id="user-avatar">U</div>
-                    <span class="user-name-label" id="user-display-name">Bạn</span>
-                    <button class="btn-logout" id="btn-logout">Đăng xuất</button>
+                    <div class="user-avatar" id="user-avatar" onclick="toggleDropdown()">U</div>
+                    <div class="user-dropdown" id="user-dropdown">
+                        <div class="dropdown-info">
+                            <div class="dropdown-avatar" id="dropdown-avatar">U</div>
+                            <div>
+                                <div class="dropdown-name" id="user-display-name">Bạn</div>
+                                <div class="dropdown-email" id="user-display-email"></div>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="profile.html" class="dropdown-item">
+                            <i class="fa-solid fa-circle-user"></i> Thông tin tài khoản
+                        </a>
+                        <a href="frontend/chatai.html" class="dropdown-item">
+                            <i class="fa-solid fa-paper-plane"></i> Bắt đầu chat
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item danger" id="btn-logout">
+                            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                        </button>
+                    </div>
                 </div>
 
-                <a href="frontend/chatai.html" class="btn-start">Bắt đầu</a>
+                <button class="btn-start" onclick="requireAuth('frontend/chatai.html')">Bắt đầu</button>
             </div>
         </div>
     </nav>
@@ -58,7 +76,7 @@
                     </h2>
                     <p>Khám phá Việt Nam theo cách của riêng bạn!</p>
                     <div class="hero-btns">
-                        <a href="frontend/chatai.html" class="cta-button">Bắt đầu ngay</a>
+                        <button class="cta-button" onclick="requireAuth('frontend/chatai.html')">Bắt đầu ngay</button>
                         <a href="#how-it-works" class="btn-text">Tìm hiểu thêm ➔</a>
                     </div>
                 </div>
@@ -119,35 +137,25 @@
         </section>
     </main>
 
-    <!-- ============================================================
-         ✅ AUTH MODAL — Đăng nhập / Đăng ký
-         ============================================================ -->
+    <!-- AUTH MODAL -->
     <div id="authModal" class="auth-overlay">
         <div class="auth-modal">
-
-            <!-- Nút đóng -->
             <button id="closeAuth" class="auth-close" aria-label="Đóng">✕</button>
-
-            <!-- Logo -->
             <div class="auth-brand">
                 <div class="auth-brand-icon">✈</div>
                 <span class="auth-brand-name">TravelAI</span>
             </div>
-
-            <!-- Tabs -->
             <div class="auth-tabs">
                 <div class="auth-tab active" id="tab-login">Đăng nhập</div>
                 <div class="auth-tab" id="tab-register">Đăng ký</div>
             </div>
 
-            <!-- ── FORM ĐĂNG NHẬP ── -->
             <form class="auth-form" id="form-login" novalidate>
                 <div class="field-group">
                     <label for="login-email">Email</label>
                     <input type="email" id="login-email" placeholder="ten@email.com" autocomplete="email" required>
                     <span class="field-error" id="err-login-email"></span>
                 </div>
-
                 <div class="field-group">
                     <label for="login-password">Mật khẩu</label>
                     <div class="input-pw-wrap">
@@ -156,28 +164,23 @@
                     </div>
                     <span class="field-error" id="err-login-password"></span>
                 </div>
-
                 <button type="submit" class="btn-auth-submit">Đăng nhập</button>
-
                 <p class="auth-footer-link">
                     Chưa có tài khoản? <a href="#" id="link-to-register">Đăng ký ngay</a>
                 </p>
             </form>
 
-            <!-- ── FORM ĐĂNG KÝ ── -->
             <form class="auth-form hidden" id="form-register" novalidate>
                 <div class="field-group">
                     <label for="reg-name">Họ và tên</label>
                     <input type="text" id="reg-name" placeholder="Nguyễn Văn A" autocomplete="name" required>
                     <span class="field-error" id="err-reg-name"></span>
                 </div>
-
                 <div class="field-group">
                     <label for="reg-email">Email</label>
                     <input type="email" id="reg-email" placeholder="ten@email.com" autocomplete="email" required>
                     <span class="field-error" id="err-reg-email"></span>
                 </div>
-
                 <div class="field-group">
                     <label for="reg-password">Mật khẩu</label>
                     <div class="input-pw-wrap">
@@ -186,7 +189,6 @@
                     </div>
                     <span class="field-error" id="err-reg-password"></span>
                 </div>
-
                 <div class="field-group">
                     <label for="reg-confirm">Xác nhận mật khẩu</label>
                     <div class="input-pw-wrap">
@@ -195,29 +197,51 @@
                     </div>
                     <span class="field-error" id="err-reg-confirm"></span>
                 </div>
-
                 <p class="auth-terms">
                     Bằng cách đăng ký, bạn đồng ý với <a href="#">Điều khoản</a> và <a href="#">Chính sách bảo mật</a>.
                 </p>
-
                 <button type="submit" class="btn-auth-submit">Tạo tài khoản</button>
-
                 <p class="auth-footer-link">
                     Đã có tài khoản? <a href="#" id="link-to-login">Đăng nhập</a>
                 </p>
             </form>
-
         </div>
     </div>
 
-    <!-- Toggle password helper (global, không cần module) -->
     <script>
+        
+        // Trạng thái login — auth.js (module) sẽ set window._isLoggedIn = true/false
+        window._isLoggedIn = false;
+        window._redirectAfterLogin = null;
+
+        // Kiểm tra login trước khi điều hướng
+        function requireAuth(dest) {
+            if (window._isLoggedIn) {
+                window.location.href = dest;
+            } else {
+                window._redirectAfterLogin = dest;
+                document.getElementById("authModal").classList.add("open");
+                document.body.style.overflow = "hidden";
+            }
+        }
+
+        // Toggle password
         function togglePw(inputId, btn) {
             const input = document.getElementById(inputId);
             const show = input.type === "password";
             input.type = show ? "text" : "password";
             btn.textContent = show ? "🙈" : "👁";
         }
+
+        // Dropdown avatar
+        function toggleDropdown() {
+            document.getElementById("user-dropdown").classList.toggle("open");
+        }
+        document.addEventListener("click", (e) => {
+            const menu = document.getElementById("user-menu");
+            const dd   = document.getElementById("user-dropdown");
+            if (dd && !menu?.contains(e.target)) dd.classList.remove("open");
+        });
     </script>
 
     <footer class="footer">
