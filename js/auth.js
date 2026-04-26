@@ -28,12 +28,13 @@ import {
 //  ⚠️  THAY firebaseConfig bằng config thật của bạn
 // ============================================================
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
+  apiKey: "AIzaSyAgF4Le5kfzuk8KKeod8HOOIWVOKEuuDtE",
+  authDomain: "travel-ai-cd422.firebaseapp.com",
+  projectId: "travel-ai-cd422",
+  storageBucket: "travel-ai-cd422.firebasestorage.app",
+  messagingSenderId: "88888788030",
+  appId: "1:88888788030:web:e5f4172867f724bc6bfd6f",
+  measurementId: "G-DPP0KL1FQH"
 };
 
 const app = initializeApp(firebaseConfig);
