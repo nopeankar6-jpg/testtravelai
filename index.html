@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelAI - Khám phá Việt Nam theo cách của bạn</title>
+    
+    <link rel="icon" type="image/png" href="assets/images/travelicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <!-- ✅ Auth styles -->
+    <link rel="stylesheet" href="css/auth.css">
+
+    <script src="js/app.js" defer></script>
+    <!-- ✅ Auth module (ES Module) -->
+    <script type="module" src="js/auth.js"></script>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">TravelAI</div>
+            
+            <ul class="nav-links">
+                <li><a href="frontend/chatai.html?view=view-explore">Điểm đến</a></li>
+                <li><a href="frontend/chatai.html?view=view-suggestions">Gợi ý</a></li>
+                <li><a href="#">Về chúng tôi</a></li>
+            </ul>
+
+            <div class="nav-auth">
+                <!-- Nút đăng nhập (ẩn khi đã login) -->
+                <button id="openLogin" class="btn-login">Đăng nhập</button>
+
+                <!-- User menu (hiện khi đã login) -->
+                <div class="user-menu" id="user-menu">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <span class="user-name-label" id="user-display-name">Bạn</span>
+                    <button class="btn-logout" id="btn-logout">Đăng xuất</button>
+                </div>
+
+                <a href="frontend/chatai.html" class="btn-start">Bắt đầu</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="hero-container">
+                <div class="hero-left">
+                    <h2 class="anim-title">
+                        Travel <br>
+                        <span class="word-wrapper">
+                            <span class="word active">differently.</span>
+                            <span class="word">together.</span>
+                        </span>
+                    </h2>
+                    <p>Khám phá Việt Nam theo cách của riêng bạn!</p>
+                    <div class="hero-btns">
+                        <a href="frontend/chatai.html" class="cta-button">Bắt đầu ngay</a>
+                        <a href="#how-it-works" class="btn-text">Tìm hiểu thêm ➔</a>
+                    </div>
+                </div>
+
+                <div class="hero-right">
+                    <div class="image-grid">
+                        <img src="assets/images/ha-long.jpg" class="grid-img img-large" alt="Vịnh Hạ Long">
+                        <img src="assets/images/hoi-an.jpg" class="grid-img" alt="Phố cổ Hội An">
+                        <img src="assets/images/cau-vang.jpg" class="grid-img" alt="Cầu Vàng Đà Nẵng">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="how-it-works">
+            <h2 class="section-title">Cách TravelAI hoạt động</h2>
+            <div class="feature-container">
+                <div class="feature-row">
+                    <div class="feature-text">
+                        <h3>Trò chuyện cùng AI</h3>
+                        <p>Chia sẻ về điểm đến mơ ước hoặc phong cách du lịch của bạn. AI sẽ phân tích và thiết kế hành trình độc bản dành riêng cho bạn.</p>
+                    </div>
+                    <div class="feature-image">
+                        <img src="assets/images/how-it-works.png" alt="Giao diện trò chuyện AI"> 
+                    </div>
+                </div>
+                <div class="feature-row reverse">
+                    <div class="feature-text">
+                        <h3>Địa danh nổi tiếng</h3>
+                        <p>Khám phá những điểm đến hấp dẫn nhất Việt Nam, được AI gợi ý chính xác dựa trên sở thích cá nhân.</p>
+                    </div>
+                    <div class="feature-image">
+                        <img src="assets/images/diadanh.png" alt="Các địa danh nổi tiếng">
+                    </div>
+                </div>
+                <div class="feature-row">
+                    <div class="feature-text">
+                        <h3>Cá nhân hóa trải nghiệm</h3>
+                        <p>Mỗi chuyến đi là một câu chuyện riêng. Chúng tôi đảm bảo mọi chi tiết đều phù hợp với nhu cầu của bạn.</p>
+                    </div>
+                    <div class="feature-image">
+                        <img src="assets/images/image.png" alt="Trải nghiệm cá nhân hóa">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="app-promo">
+            <div class="promo-container">
+                <div class="promo-content">
+                    <h2>Để chúng tôi đồng hành<br>trên mọi hành trình!</h2>
+                    <p>Trải nghiệm ứng dụng TravelAI ngay trên điện thoại của bạn.</p>
+                </div>
+                <div class="promo-image">
+                    <img src="assets/images/anhdt.png" alt="TravelAI Mobile App">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============================================================
+         ✅ AUTH MODAL — Đăng nhập / Đăng ký
+         ============================================================ -->
+    <div id="authModal" class="auth-overlay">
+        <div class="auth-modal">
+
+            <!-- Nút đóng -->
+            <button id="closeAuth" class="auth-close" aria-label="Đóng">✕</button>
+
+            <!-- Logo -->
+            <div class="auth-brand">
+                <div class="auth-brand-icon">✈</div>
+                <span class="auth-brand-name">TravelAI</span>
+            </div>
+
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="tab-login">Đăng nhập</div>
+                <div class="auth-tab" id="tab-register">Đăng ký</div>
+            </div>
+
+            <!-- ── FORM ĐĂNG NHẬP ── -->
+            <form class="auth-form" id="form-login" novalidate>
+                <div class="field-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="ten@email.com" autocomplete="email" required>
+                    <span class="field-error" id="err-login-email"></span>
+                </div>
+
+                <div class="field-group">
+                    <label for="login-password">Mật khẩu</label>
+                    <div class="input-pw-wrap">
+                        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+                        <button type="button" class="toggle-pw" onclick="togglePw('login-password', this)">👁</button>
+                    </div>
+                    <span class="field-error" id="err-login-password"></span>
+                </div>
+
+                <button type="submit" class="btn-auth-submit">Đăng nhập</button>
+
+                <p class="auth-footer-link">
+                    Chưa có tài khoản? <a href="#" id="link-to-register">Đăng ký ngay</a>
+                </p>
+            </form>
+
+            <!-- ── FORM ĐĂNG KÝ ── -->
+            <form class="auth-form hidden" id="form-register" novalidate>
+                <div class="field-group">
+                    <label for="reg-name">Họ và tên</label>
+                    <input type="text" id="reg-name" placeholder="Nguyễn Văn A" autocomplete="name" required>
+                    <span class="field-error" id="err-reg-name"></span>
+                </div>
+
+                <div class="field-group">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" placeholder="ten@email.com" autocomplete="email" required>
+                    <span class="field-error" id="err-reg-email"></span>
+                </div>
+
+                <div class="field-group">
+                    <label for="reg-password">Mật khẩu</label>
+                    <div class="input-pw-wrap">
+                        <input type="password" id="reg-password" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" required>
+                        <button type="button" class="toggle-pw" onclick="togglePw('reg-password', this)">👁</button>
+                    </div>
+                    <span class="field-error" id="err-reg-password"></span>
+                </div>
+
+                <div class="field-group">
+                    <label for="reg-confirm">Xác nhận mật khẩu</label>
+                    <div class="input-pw-wrap">
+                        <input type="password" id="reg-confirm" placeholder="Nhập lại mật khẩu" autocomplete="new-password" required>
+                        <button type="button" class="toggle-pw" onclick="togglePw('reg-confirm', this)">👁</button>
+                    </div>
+                    <span class="field-error" id="err-reg-confirm"></span>
+                </div>
+
+                <p class="auth-terms">
+                    Bằng cách đăng ký, bạn đồng ý với <a href="#">Điều khoản</a> và <a href="#">Chính sách bảo mật</a>.
+                </p>
+
+                <button type="submit" class="btn-auth-submit">Tạo tài khoản</button>
+
+                <p class="auth-footer-link">
+                    Đã có tài khoản? <a href="#" id="link-to-login">Đăng nhập</a>
+                </p>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Toggle password helper (global, không cần module) -->
+    <script>
+        function togglePw(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const show = input.type === "password";
+            input.type = show ? "text" : "password";
+            btn.textContent = show ? "🙈" : "👁";
+        }
+    </script>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-left">
+                <span>© 2026 TravelAI, Inc.</span>
+                <a href="#">Bảo mật</a>
+                <a href="#">Điều khoản</a>
+            </div>
+            <div class="footer-right">
+                <a href="https://www.instagram.com" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://www.tiktok.com" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="https://www.facebook.com" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="https://twitter.com" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="https://www.youtube.com" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                <a href="https://www.linkedin.com" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
